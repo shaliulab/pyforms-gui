@@ -98,7 +98,13 @@ class AbstractGLWidget(object):
 
         self._font = QtGui.QFont()
         self._font.setPointSize(conf.PYFORMS_CONTROLPLAYER_FONT)
-
+        self._endDrag = (0., 0.)
+        self._startDrag = (0., 0.)
+        self._dragging = False
+        self._x_trans = 0
+        self._y_trans = 0
+        self._diff_x = 0
+        self._diff_y = 0
 
     def initializeGL(self):
         """
@@ -188,7 +194,27 @@ class AbstractGLWidget(object):
         
         
         GL.glTranslatef(0, 0, -1)
-        GL.glTranslatef(0, 0, -self.zoom)
+
+        if self._dragging:
+            print(f"Start {self._startDrag}, End {self._endDrag}")
+            self._diff_x = (self._endDrag[0] - self._startDrag[0]) / self.img_width
+            self._diff_y = (self._endDrag[1] - self._startDrag[1]) / self.img_height
+
+        x_trans = max(-1, min(1, self._x_trans + self._diff_x))
+        y_trans = max(-1, min(1, self._y_trans + self._diff_y))
+
+        GL.glTranslatef(
+            x_trans,
+            -y_trans,
+            -self.zoom
+        )
+
+        if not self._dragging:
+            self._x_trans = x_trans
+            self._y_trans = y_trans
+            self._diff_x = 0
+            self._diff_y = 0
+
         
         if len(self.image_2_display)>1: 
             #in case of having more images to display, it centers the images
@@ -265,6 +291,7 @@ class AbstractGLWidget(object):
                     p1 = self._mouseStartDragPoint
                     p2 = self._get_current_mouse_point()
                     self.onDrag(p1, p2)
+
 
                 if self._move_img and self._mouse_pressed:
                     p1 = self._mouseStartDragPoint
@@ -423,7 +450,11 @@ class AbstractGLWidget(object):
 
         QApplication.processEvents()
         self.update()
-        
+
+        if not self._dragging:
+            self._startDrag = (self._mouseX, self._mouseY)
+        if self._dragging:
+            self._endDrag = (self._mouseX, self._mouseY)
 
     def keyPressEvent(self, event):
         super(AbstractGLWidget, self).keyPressEvent(event)
@@ -452,9 +483,15 @@ class AbstractGLWidget(object):
 
     def onClick(self, event, x, y): pass
 
-    def onDrag(self, startPoint, endPoint): pass
+    def onDrag(self, startPoint, endPoint):
+        print("Start of drag")
+        # self._startDrag = startPoint
+        # self._endDrag = startPoint
+        self._dragging = True
 
-    def onEndDrag(self, startPoint, endPoint): pass
+    def onEndDrag(self, startPoint, endPoint):
+        print("End of drag")
+        self._dragging = False
 
     def on_key_release(self, event):
         # Control video playback using the space bar to Play/Pause
