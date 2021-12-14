@@ -47,6 +47,8 @@ logger = logging.getLogger(__name__)
 
 class ControlPlayer(ControlBase, QFrame):
 
+    VideoCapture = cv2.VideoCapture
+
     def __init__(self, *args, **kwargs):
         self._video_widget = None  # GL widget
 
@@ -401,7 +403,7 @@ class ControlPlayer(ControlBase, QFrame):
         self._video_widget.reset()
 
         if value == 0:
-            self._value = cv2.VideoCapture(0)
+            self._value = self.VideoCapture(0)
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
@@ -429,7 +431,7 @@ class ControlPlayer(ControlBase, QFrame):
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
             else:
-                self._value = cv2.VideoCapture(value)
+                self._value = self.cv2.VideoCapture(value)
         else:
             self._value = value
 
