@@ -400,7 +400,9 @@ class ControlPlayer(ControlBase, QFrame):
             self.stop()
             self.videoControl.setEnabled(False)
             self.refresh()
+
         self._video_widget.reset()
+
 
         if value == 0:
             self._value = self.VideoCapture(0)
@@ -431,7 +433,7 @@ class ControlPlayer(ControlBase, QFrame):
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
             else:
-                self._value = self.cv2.VideoCapture(value)
+                self._value = self.VideoCapture(value)
         else:
             self._value = value
 
@@ -487,6 +489,7 @@ class ControlPlayer(ControlBase, QFrame):
             return
 
         # read next frame
+        import ipdb; ipdb.set_trace()
         (success, self._current_frame) = self.value.read()
 
         # increment frame index if the step is bigger than 1
