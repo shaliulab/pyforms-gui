@@ -34,7 +34,6 @@ class MultiFeedCapture:
             
             CHUNK_MAX = len(avi_files)
 
-
             if QUICK:
                 chunk_numbers = list(range(max(0, self._chunk-10), min(CHUNK_MAX, self._chunk + 10), 1))
             else:
@@ -43,11 +42,12 @@ class MultiFeedCapture:
             self._cap = cv2.VideoCapture(path)
             self._store = imgstore.new_for_filename(dirname, chunk_numbers=chunk_numbers)
             self._lowres_store = imgstore.new_for_filename(lowres_path, chunk_numbers=chunk_numbers)
+            self._last_frame_in_chunk = 0
 
 
     def get(self, index):
         # something here with the imgstore
-        return self._cap.get(value)
+        return self._cap.get(index)
 
 
     def set(self, index, value):
@@ -58,15 +58,27 @@ class MultiFeedCapture:
         return self._cap.set(index, value)
 
 
+    def compute_timestamp(self, frame_in_chunk):    
+        index = int(min(
+            len(self._store._get_chunk_metadata(self._chunk)["frame_time"])-1,
+            frame_in_chunk
+        ))
+
+        timestamp = self._store._get_chunk_metadata(self._chunk)["frame_time"][index]
+        return timestamp
+
+
+
     def sync_store(self, frame_in_chunk):
         """
         Sets the lowres store to the same timestamp as that of the frame just read
         using cv2
         """
-        timestamp = self._store._get_chunk_metadata(self._chunk)["frame_time"][frame_in_chunk]
+        timestamp = self.compute_timestamp(frame_in_chunk)
         logger.debug(f"Syncing lowres store to timestamp {timestamp} - (frame {frame_in_chunk} in chunk {self._chunk})")
         img, (frame_number, timestamp_lowres) = self._lowres_store._get_image_by_time(timestamp)
         self._lowres_store.get_image(frame_number-1)
+        self._last_frame_in_chunk = frame_in_chunk
 
 
     def release(self):
@@ -122,14 +134,16 @@ class MultiFeedCapture:
         status, frame = self._cap.read()
 
 
-        if not self._synced:
-            frame_in_chunk = int(self._cap.get(1))
+        frame_in_chunk = int(self._cap.get(1))
+
+        if abs(frame_in_chunk - self._last_frame_in_chunk) == 1:
+            timestamp = self.compute_timestamp(frame_in_chunk)
+            self._lowres_store.view_store(timestamp)
+        else:
             self.sync_store(frame_in_chunk)
-            self._synced=True
-
-        img, metadata = self._lowres_store.get_next_image()
-
-        self.show_extra(img, metadata)
+            img, metadata = self._lowres_store.get_next_image()
+            self.show_extra(img, metadata)
+    
         # img = cv2.resize(img, frame.shape[:2][::-1], cv2.INTER_AREA)
         # frame = np.hstack([frame, img])
         return status, frame

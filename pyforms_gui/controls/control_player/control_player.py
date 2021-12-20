@@ -489,7 +489,6 @@ class ControlPlayer(ControlBase, QFrame):
             return
 
         # read next frame
-        import ipdb; ipdb.set_trace()
         (success, self._current_frame) = self.value.read()
 
         # increment frame index if the step is bigger than 1
