@@ -56,7 +56,7 @@ class ControlPlayer(ControlBase, QFrame):
         ControlBase.__init__(self, *args, **kwargs)
 
         self._multiple_files = kwargs.get('multiple_files', False)
-        self._imgstore_file = kwargs.get('imgstore_file', False)
+        # self._imgstore_file = kwargs.get('imgstore_file', False)
 
         self._current_frame = None  # current frame image
         self._current_frame_index = None # current frame index
@@ -433,7 +433,7 @@ class ControlPlayer(ControlBase, QFrame):
                 self._value = MultipleVideoCapture(value)
             else:
                 self._value = cv2.VideoCapture(value)
-        elif isinstance(value, list) and self._imgstore_file:
+        elif isinstance(value, list):
                 self._value = new_for_filenames(value)
         else:
             self._value = value
