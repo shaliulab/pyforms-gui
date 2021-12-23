@@ -16,6 +16,8 @@ import logging, os, math
 from AnyQt.QtWidgets import QStyle
 from .multiple_videocapture import MultipleVideoCapture
 
+from imgstore import new_for_filenames
+
 try:
     import cv2
 except:
@@ -54,6 +56,7 @@ class ControlPlayer(ControlBase, QFrame):
         ControlBase.__init__(self, *args, **kwargs)
 
         self._multiple_files = kwargs.get('multiple_files', False)
+        self._imgstore_file = kwargs.get('imgstore_file', False)
 
         self._current_frame = None  # current frame image
         self._current_frame_index = None # current frame index
@@ -405,6 +408,7 @@ class ControlPlayer(ControlBase, QFrame):
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
+            open_imgstore = self._imgstore_file
 
             if open_multiplefiles:
                 open_multiplefiles = len(MultipleVideoCapture.search_files(value))>0
@@ -428,6 +432,8 @@ class ControlPlayer(ControlBase, QFrame):
 
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
+            elif open_imgstore:
+                self._value = new_for_filenames(value)
             else:
                 self._value = cv2.VideoCapture(value)
         else:
