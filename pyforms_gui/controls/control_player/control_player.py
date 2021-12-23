@@ -408,7 +408,6 @@ class ControlPlayer(ControlBase, QFrame):
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
-            open_imgstore = self._imgstore_file
 
             if open_multiplefiles:
                 open_multiplefiles = len(MultipleVideoCapture.search_files(value))>0
@@ -432,10 +431,10 @@ class ControlPlayer(ControlBase, QFrame):
 
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
-            elif open_imgstore:
-                self._value = new_for_filenames(value)
             else:
                 self._value = cv2.VideoCapture(value)
+        elif isinstance(value, list) and self._imgstore_file:
+                self._value = new_for_filenames(value)
         else:
             self._value = value
 
