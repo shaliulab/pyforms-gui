@@ -6,6 +6,8 @@ from confapp      import conf
 from AnyQt           import QtCore, uic
 from AnyQt.QtWidgets import QMenu, QAction
 from AnyQt.QtGui     import QIcon, QKeySequence
+import os
+TESTING = os.environ.get("TESTING", "False") == "True"
 
 class ControlBase(object):
     """
@@ -259,7 +261,7 @@ class ControlBase(object):
         """
         Return the control visibility.
         """
-        return self.form.isVisible()
+        return self.form.isVisible() or TESTING
 
     @property
     def help(self):
