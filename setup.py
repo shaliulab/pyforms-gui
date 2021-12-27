@@ -52,10 +52,10 @@ setup(
         'controls/*.ui', 
         'controls/control_player/*.ui',
         'controls/control_event_timeline/*.ui',
-        'controls/control_event_timeline/events/*.ui']
+        'controls/control_event_timeline/events/*.ui',
+    ]
     },
-
-
+    include_package_data=True,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         
