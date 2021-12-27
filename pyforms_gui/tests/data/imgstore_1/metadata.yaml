@@ -1,0 +1,15 @@
+__store:
+  chunksize: 75
+  class: VideoImgStore
+  created_utc: '2021-12-23T17:13:24.603540'
+  encoding: null
+  extension: .avi
+  format: mjpeg/avi
+  framerate: 15
+  imgdtype: uint8
+  imgshape:
+  - 1498
+  - 1514
+  timezone_local: Etc/UTC
+  uuid: 4295f4a238874619b5171c4e2e5942b4
+  version: 2
