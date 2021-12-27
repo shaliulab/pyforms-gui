@@ -16,7 +16,7 @@ import logging, os, math
 from AnyQt.QtWidgets import QStyle
 from .multiple_videocapture import MultipleVideoCapture
 
-from imgstore import new_for_filenames
+from imgstore.multistores import MultiStore
 
 try:
     import cv2
@@ -405,6 +405,9 @@ class ControlPlayer(ControlBase, QFrame):
 
         if value == 0:
             self._value = cv2.VideoCapture(0)
+
+        if isinstance(value, str) and value.endswith(".yaml"):
+                self._value = MultiStore.new_for_filename(value, annotate=conf.PLAYER_ANNOTATE)
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
@@ -433,8 +436,7 @@ class ControlPlayer(ControlBase, QFrame):
                 self._value = MultipleVideoCapture(value)
             else:
                 self._value = cv2.VideoCapture(value)
-        elif isinstance(value, list):
-                self._value = new_for_filenames(value)
+
         else:
             self._value = value
 
