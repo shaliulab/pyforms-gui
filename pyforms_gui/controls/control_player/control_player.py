@@ -335,6 +335,7 @@ class ControlPlayer(ControlBase, QFrame):
 
     @video_index.setter
     def video_index(self, value):
+        import ipdb; ipdb.set_trace()
         if value<0: value = 0
         if value>=self.max: value = self.max-1
         self._value.set(1, value)
