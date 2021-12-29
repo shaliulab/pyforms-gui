@@ -406,8 +406,19 @@ class ControlPlayer(ControlBase, QFrame):
         if value == 0:
             self._value = cv2.VideoCapture(0)
 
-        if isinstance(value, str) and value.endswith(".yaml"):
-                self._value = MultiStore.new_for_filename(value, annotate=conf.PLAYER_ANNOTATE)
+        if isinstance(value, str) and ".yaml" in value:
+                data = value.split("@")
+                if len(data) == 2:
+                    metadata, chunk = data
+                else:
+                    metadata = data[0]
+                    chunk = None
+                value = metadata
+                self._value = MultiStore.new_for_filename(
+                    metadata,
+                    ref_chunk=chunk,
+                    annotate=conf.PLAYER_ANNOTATE
+                )
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
@@ -445,10 +456,12 @@ class ControlPlayer(ControlBase, QFrame):
             self.videoProgress.setValue(0)
             self.videoProgress.setMaximum(
                 self._value.get(7))
-            self.videoFrames.setMinimum(0)
-            self.videoFrames.setValue(0)
+            self.videoFrames.setMinimum(self._value.data_interval[0])
+            self.videoFrames.setValue(self._value.data_interval[0])
             self.videoFrames.setMaximum(
-                self._value.get(7))
+                self._value.data_interval[1]
+            )
+
 
         if self._value:
             self.videoControl.setEnabled(True)
