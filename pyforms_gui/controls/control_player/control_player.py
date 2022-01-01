@@ -198,6 +198,7 @@ class ControlPlayer(ControlBase, QFrame):
         Forward one frame.
         :return:
         """
+        #import ipdb; ipdb.set_trace()
         self.call_next_frame()
 
 
@@ -335,7 +336,6 @@ class ControlPlayer(ControlBase, QFrame):
 
     @video_index.setter
     def video_index(self, value):
-        import ipdb; ipdb.set_trace()
         if value<0: value = 0
         if value>=self.max: value = self.max-1
         self._value.set(1, value)
@@ -453,15 +453,16 @@ class ControlPlayer(ControlBase, QFrame):
             self._value = value
 
         if self._value and value != 0:
-            self.videoProgress.setMinimum(0)
-            self.videoProgress.setValue(0)
-            self.videoProgress.setMaximum(
-                self._value.get(7))
-            self.videoFrames.setMinimum(self._value.data_interval[0])
-            self.videoFrames.setValue(self._value.data_interval[0])
-            self.videoFrames.setMaximum(
-                self._value.data_interval[1]
-            )
+            min_frame = 0
+            max_frame = self._value.get(7)
+            logger.warning(f"Setting min and max to {min_frame} and {max_frame}")
+            self.videoProgress.setMinimum(min_frame)
+            self.videoProgress.setValue(min_frame)
+            self.videoProgress.setMaximum(max_frame)
+            self.videoFrames.setMinimum(min_frame)
+            self.videoFrames.setValue(min_frame)
+            self.videoFrames.setMaximum(max_frame)
+            self.video_index = min_frame
 
 
         if self._value:
@@ -530,6 +531,9 @@ class ControlPlayer(ControlBase, QFrame):
 
         if not self.videoProgress.isSliderDown():
 
+
+            # import ipdb; ipdb.set_trace()
+
             if update_slider and self._update_video_slider:
                 self._update_video_slider = False
                 self.videoProgress.setValue(self._current_frame_index)
@@ -593,12 +597,16 @@ class ControlPlayer(ControlBase, QFrame):
 
         if not self.is_playing and self._update_video_slider:
             new_index = self.videoProgress.value()
+            logger.warning(f"New index is {new_index}")
             self._value.set(1, new_index)
             self.call_next_frame(update_slider=False, increment_frame=False)
 
     def video_frames_value_changed(self, pos):
 
         if not self.is_playing and self._update_video_frame:
+            logger.warning(f"Setting frame position to {pos}")
             self._value.set(1, pos) # set the video position
+            self.video_index = pos
             self.call_next_frame(update_number=False, increment_frame=False)
+            
 
