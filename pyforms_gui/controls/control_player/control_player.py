@@ -198,7 +198,23 @@ class ControlPlayer(ControlBase, QFrame):
         Forward one frame.
         :return:
         """
-        #import ipdb; ipdb.set_trace()
+        self.call_next_frame()
+
+
+    def back_one_second(self):
+        """
+        Back one second.
+        :return:
+        """
+        self.video_index -= 1 * self.fps
+        self.call_next_frame()
+
+    def forward_one_second(self):
+        """
+        Forward one second.
+        :return:
+        """
+        self.video_index += 1 * self.fps
         self.call_next_frame()
 
 
@@ -530,9 +546,6 @@ class ControlPlayer(ControlBase, QFrame):
             self._video_widget.paint([frame])
 
         if not self.videoProgress.isSliderDown():
-
-
-            # import ipdb; ipdb.set_trace()
 
             if update_slider and self._update_video_slider:
                 self._update_video_slider = False
