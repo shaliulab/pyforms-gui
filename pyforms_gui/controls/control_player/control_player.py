@@ -591,7 +591,7 @@ class ControlPlayer(ControlBase, QFrame):
 
     def convertFrameToTime(self, totalMilliseconds):
         # totalMilliseconds = totalMilliseconds*(1000.0/self._value.get(5))
-        if math.isnan(totalMilliseconds): return 0, 0, 0
+        if math.isnan(totalMilliseconds): return 0, 0, 0, 0, 0
         totalseconds = int(totalMilliseconds / 1000)
         dt = datetime.datetime.fromtimestamp(totalseconds)
         day = dt.day - 1
