@@ -12,7 +12,7 @@ __maintainer__ = "Ricardo Ribeiro"
 __email__ = "ricardojvr@gmail.com"
 __status__ = "Development"
 
-import logging, os, math
+import logging, os, math, datetime
 from AnyQt.QtWidgets import QStyle
 from .multiple_videocapture import MultipleVideoCapture
 
@@ -593,17 +593,20 @@ class ControlPlayer(ControlBase, QFrame):
         # totalMilliseconds = totalMilliseconds*(1000.0/self._value.get(5))
         if math.isnan(totalMilliseconds): return 0, 0, 0
         totalseconds = int(totalMilliseconds / 1000)
-        minutes = int(totalseconds / 60)
-        seconds = totalseconds - (minutes * 60)
-        milliseconds = totalMilliseconds - (totalseconds * 1000)
-        return (minutes, seconds, milliseconds)
+        dt = datetime.datetime.fromtimestamp(totalseconds)
+        day = dt.day - 1
+        hour = dt.hour
+        minute = dt.minute
+        second = dt.second
+        millisecond = dt.microsecond / 1000
+
+        return (day, hour, minute, second, millisecond)
 
     def videoProgress_valueChanged(self):
         milli = self._value.get(0)
-        (minutes, seconds, milliseconds) = self.convertFrameToTime(milli)
+        (day, hour, minute, second, millisecond) = self.convertFrameToTime(milli)
         self.videoTime.setText(
-            "%02d:%02d:%03d" % (minutes, seconds, milliseconds))
-
+            "%02d %02d:%02d:%02d:%03d" % (day, hour, minute, second, millisecond))
 
 
     def videoProgress_sliderReleased(self):
