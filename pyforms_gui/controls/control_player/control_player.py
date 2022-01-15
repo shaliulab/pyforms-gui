@@ -217,6 +217,22 @@ class ControlPlayer(ControlBase, QFrame):
         self.video_index += 1 * self.fps
         self.call_next_frame()
 
+    def back_five_second(self):
+        """
+        Back five second.
+        :return:
+        """
+        self.video_index -= 5 * self.fps
+        self.call_next_frame()
+
+    def forward_five_second(self):
+        """
+        Forward five second.
+        :return:
+        """
+        self.video_index += 5 * self.fps
+        self.call_next_frame()
+
 
     def set_speed_1x(self):
         """
@@ -500,9 +516,9 @@ class ControlPlayer(ControlBase, QFrame):
         self._video_widget.rotateZ = self.form.horizontalSlider.value()
         self.refresh()
 
-
-
-
+    def toggle_video(self):
+        if getattr(self.value, "toggle", False):
+            self.value.toggle()
 
     def call_next_frame(self, update_slider=True, update_number=True, increment_frame=True):
         # move the player to the next frame
