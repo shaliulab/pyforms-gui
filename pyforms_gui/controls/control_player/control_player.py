@@ -42,7 +42,13 @@ if _api.USED_API == _api.QT_API_PYQT5:
 elif _api.USED_API == _api.QT_API_PYQT4:
     from pyforms_gui.controls.control_player.VideoGLWidget 		 import VideoGLWidget
 
-from imgstore.interface import VideoCapture
+try:
+    from imgstore.interface import VideoCapture
+    TOTAL_NUMBER_OF_FRAMES="TOTAL_NUMBER_OF_FRAMES"
+except:
+    from cv2 import VideoCapture
+    TOTAL_NUMBER_OF_FRAMES=7
+
 
 logger = logging.getLogger(__name__)
 
@@ -452,12 +458,12 @@ class ControlPlayer(ControlBase, QFrame):
             self.videoProgress.setValue(0)
             self.videoProgress.setMaximum(
                 # This self._value. query is OK
-                self._value.get("TOTAL_NUMBER_OF_FRAMES"))
+                self._value.get(TOTAL_NUMBER_OF_FRAMES))
             self.videoFrames.setMinimum(0)
             self.videoFrames.setValue(0)
             self.videoFrames.setMaximum(
                 # This self._value. query is OK
-                self._value.get("TOTAL_NUMBER_OF_FRAMES")
+                self._value.get(TOTAL_NUMBER_OF_FRAMES)
             )
 
         if self._value:
