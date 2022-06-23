@@ -42,6 +42,7 @@ if _api.USED_API == _api.QT_API_PYQT5:
 elif _api.USED_API == _api.QT_API_PYQT4:
     from pyforms_gui.controls.control_player.VideoGLWidget 		 import VideoGLWidget
 
+from imgstore.interface import VideoCapture
 
 logger = logging.getLogger(__name__)
 
@@ -328,18 +329,26 @@ class ControlPlayer(ControlBase, QFrame):
         self.form.verticalSlider.setVisible(value)
 
     @property
-    def video_index(self): return int(self._value.get(1)) if self._value else None
+    def video_index(self):
+        if self._value:
+            # This self._value. query is OK
+            return int(self._value.get(1))
+        else:
+            return None
 
     @video_index.setter
     def video_index(self, value):
         if value<0: value = 0
         if value>=self.max: value = self.max-1
+        # This self._value. query is OK
         self._value.set(1, value)
 
     @property
     def max(self):
         if self._value is None or self._value=='':
             return 0
+
+        # This self._value. query is OK
         return int(self._value.get(7))
 
     @property
@@ -360,6 +369,7 @@ class ControlPlayer(ControlBase, QFrame):
         """
             Return the video frames per second
         """
+        # This self._value. query is OK
         return self._value.get(5)
 
     @property
@@ -376,10 +386,14 @@ class ControlPlayer(ControlBase, QFrame):
     def form(self): return self
 
     @property
-    def frame_width(self): return self._value.get(3)
+    def frame_width(self):
+        # This self._value. query is OK
+        return self._value.get(3)
 
     @property
-    def frame_height(self): return self._value.get(4)
+    def frame_height(self):
+        # This self._value. query is OK
+        return self._value.get(4)
 
     @property
     def is_playing(self): return self._timer.isActive()
@@ -401,7 +415,7 @@ class ControlPlayer(ControlBase, QFrame):
         self._video_widget.reset()
 
         if value == 0:
-            self._value = cv2.VideoCapture(0)
+            self._value = VideoCapture(0)
         elif isinstance(value, str) and value:
 
             open_multiplefiles = self._multiple_files
@@ -429,7 +443,7 @@ class ControlPlayer(ControlBase, QFrame):
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
             else:
-                self._value = cv2.VideoCapture(value)
+                self._value = VideoCapture(value)
         else:
             self._value = value
 
@@ -437,11 +451,14 @@ class ControlPlayer(ControlBase, QFrame):
             self.videoProgress.setMinimum(0)
             self.videoProgress.setValue(0)
             self.videoProgress.setMaximum(
-                self._value.get(7))
+                # This self._value. query is OK
+                self._value.get("TOTAL_NUMBER_OF_FRAMES"))
             self.videoFrames.setMinimum(0)
             self.videoFrames.setValue(0)
             self.videoFrames.setMaximum(
-                self._value.get(7))
+                # This self._value. query is OK
+                self._value.get("TOTAL_NUMBER_OF_FRAMES")
+            )
 
         if self._value:
             self.videoControl.setEnabled(True)
@@ -552,7 +569,6 @@ class ControlPlayer(ControlBase, QFrame):
             self.play()
 
     def convertFrameToTime(self, totalMilliseconds):
-        # totalMilliseconds = totalMilliseconds*(1000.0/self._value.get(5))
         if math.isnan(totalMilliseconds): return 0, 0, 0
         totalseconds = int(totalMilliseconds / 1000)
         minutes = int(totalseconds / 60)
@@ -561,6 +577,7 @@ class ControlPlayer(ControlBase, QFrame):
         return (minutes, seconds, milliseconds)
 
     def videoProgress_valueChanged(self):
+        # This self._value. query is OK
         milli = self._value.get(0)
         (minutes, seconds, milliseconds) = self.convertFrameToTime(milli)
         self.videoTime.setText(
@@ -572,12 +589,14 @@ class ControlPlayer(ControlBase, QFrame):
 
         if not self.is_playing and self._update_video_slider:
             new_index = self.videoProgress.value()
+            # This self._value. query is OK
             self._value.set(1, new_index)
             self.call_next_frame(update_slider=False, increment_frame=False)
 
     def video_frames_value_changed(self, pos):
 
         if not self.is_playing and self._update_video_frame:
+            # This self._value. query is OK
             self._value.set(1, pos) # set the video position
             self.call_next_frame(update_number=False, increment_frame=False)
 

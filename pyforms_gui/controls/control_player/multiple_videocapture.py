@@ -8,6 +8,7 @@ class MultipleVideoCapture(object):
     def __init__(self, filepath):
 
         # VideoCapture objects
+        # This cv2.VideoCapture is OK because it's only used with opencv videos
         self.captures = [cv2.VideoCapture(fn) for fn in self.search_files(filepath)]
 
         # Number of frames for each VideoCapture
