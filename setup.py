@@ -21,7 +21,7 @@ with open('README.md', 'r') as fd:
     long_description = fd.read()
 
 setup(
-    name='PyForms GUI',
+    name='PyForms GUI-shaliulab',
     version=version,
     description="""Pyforms is a Python framework to develop GUI applications based on pyqt""",
     author='Ricardo Ribeiro, Luís Teixeira',
@@ -54,8 +54,9 @@ setup(
         'controls/control_event_timeline/*.ui',
         'controls/control_event_timeline/events/*.ui']
     },
-
-
+    extras_require={
+        "imgstore": ["imgstore-shaliulab>=0.4.4"]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         
