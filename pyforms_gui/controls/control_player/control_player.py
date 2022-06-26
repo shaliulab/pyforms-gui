@@ -277,6 +277,79 @@ class ControlPlayer(ControlBase, QFrame):
         self.next_frame_step = 9
         self.video_widget.show_tmp_msg('Speed: 9x')
 
+    def set_speed_10x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 10
+        self.video_widget.show_tmp_msg('Speed: 10x')
+
+    def set_speed_20x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 20
+        self.video_widget.show_tmp_msg('Speed: 20x')
+
+    def set_speed_30x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 30
+        self.video_widget.show_tmp_msg('Speed: 30x')
+
+    def set_speed_40x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 40
+        self.video_widget.show_tmp_msg('Speed: 40x')
+
+    def set_speed_50x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 50
+        self.video_widget.show_tmp_msg('Speed: 50x')
+
+    def set_speed_60(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 60
+        self.video_widget.show_tmp_msg('Speed: 60x')
+
+    def set_speed_70x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 70
+        self.video_widget.show_tmp_msg('Speed: 70x')
+
+    def set_speed_80x(self):
+        """
+        Set video playing speed 9x.
+        :return:
+        """
+        self.next_frame_step = 80
+        self.video_widget.show_tmp_msg('Speed: 80x')
+
+    def set_speed_90x(self):
+        """
+        Set video playing speed 90x.
+        :return:
+        """
+        self.next_frame_step = 90
+        self.video_widget.show_tmp_msg('Speed: 90x')
+
+
     ##########################################################################
     ############ EVENTS ######################################################
     ##########################################################################
