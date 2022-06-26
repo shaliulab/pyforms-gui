@@ -355,7 +355,7 @@ class ControlPlayer(ControlBase, QFrame):
             return 0
 
         # This self._value. query is OK
-        return int(self._value.get(7))
+        return int(self._value.get(TOTAL_NUMBER_OF_FRAMES))
 
     @property
     def frame(self): return self._current_frame
