@@ -317,7 +317,7 @@ class ControlPlayer(ControlBase, QFrame):
         self.next_frame_step = 50
         self.video_widget.show_tmp_msg('Speed: 50x')
 
-    def set_speed_60(self):
+    def set_speed_60x(self):
         """
         Set video playing speed 9x.
         :return:
