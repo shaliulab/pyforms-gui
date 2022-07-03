@@ -12,6 +12,7 @@ __maintainer__ = "Ricardo Ribeiro"
 __email__ = "ricardojvr@gmail.com"
 __status__ = "Development"
 
+import codetiming
 import logging, os, math
 from AnyQt.QtWidgets import QStyle
 from .multiple_videocapture import MultipleVideoCapture
@@ -581,7 +582,8 @@ class ControlPlayer(ControlBase, QFrame):
             return
 
         # read next frame
-        (success, self._current_frame) = self.value.read()
+        with codetiming.Timer(text="self.value.read took {:.8f} seconds", logger=logger.debug):
+            (success, self._current_frame) = self.value.read()
 
         # increment frame index if the step is bigger than 1
         if increment_frame and self.next_frame_step > 1:
