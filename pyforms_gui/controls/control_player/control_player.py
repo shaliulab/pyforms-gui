@@ -584,7 +584,7 @@ class ControlPlayer(ControlBase, QFrame):
         # read next frame
         with codetiming.Timer(text="self.value.read took {:.8f} seconds", logger=logger.debug):
             (success, self._current_frame) = self.value.read()
-
+ 
         # increment frame index if the step is bigger than 1
         if increment_frame and self.next_frame_step > 1:
             self.video_index += self.next_frame_step
@@ -650,6 +650,7 @@ class ControlPlayer(ControlBase, QFrame):
             self.play()
 
     def convertFrameToTime(self, totalMilliseconds):
+        # totalMilliseconds = totalMilliseconds*(1000.0/self._value.get(5))
         if math.isnan(totalMilliseconds): return 0, 0, 0
         totalseconds = int(totalMilliseconds / 1000)
         minutes = int(totalseconds / 60)
@@ -657,13 +658,22 @@ class ControlPlayer(ControlBase, QFrame):
         milliseconds = totalMilliseconds - (totalseconds * 1000)
         return (minutes, seconds, milliseconds)
 
-    def videoProgress_valueChanged(self):
-        # This self._value. query is OK
-        milli = self._value.get(0)
-        (minutes, seconds, milliseconds) = self.convertFrameToTime(milli)
-        self.videoTime.setText(
-            "%02d:%02d:%03d" % (minutes, seconds, milliseconds))
 
+    def convertFrameToHours(self, totalMilliseconds):
+        if math.isnan(totalMilliseconds): return 0, 0, 0
+        hours = totalMilliseconds / 1000 / 3600
+        return hours
+
+        
+    def videoProgress_valueChanged(self):
+        milli = self._value.get(0)
+        if conf.TIME_FORMAT == "MSM":
+            (minutes, seconds, milliseconds) = self.convertFrameToTime(milli)
+            self.videoTime.setText(
+                "%02d:%02d:%03d" % (minutes, seconds, milliseconds))
+        elif conf.TIME_FORMAT == "H":
+            hours = self.convertFrameToHours(milli)
+            self.videoTime.setText(f"{round(hours, 2)} H")     
 
 
     def videoProgress_sliderReleased(self):

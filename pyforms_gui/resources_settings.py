@@ -35,3 +35,4 @@ PYFORMS_ICON_EVENTTIMELINE_ADD = QIcon(path(os.path.join("Controls", "uipics", "
 PYFORMS_ICON_EVENTTIMELINE_REMOVE = QIcon(path(os.path.join("Controls", "uipics", "remove.png")))
 
 PYFORMS_ICON_FILE_OPEN = QIcon()
+TIME_FORMAT="MSM"
