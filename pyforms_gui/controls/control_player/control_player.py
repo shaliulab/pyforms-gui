@@ -671,9 +671,11 @@ class ControlPlayer(ControlBase, QFrame):
             (minutes, seconds, milliseconds) = self.convertFrameToTime(milli)
             self.videoTime.setText(
                 "%02d:%02d:%03d" % (minutes, seconds, milliseconds))
-        elif conf.TIME_FORMAT == "H":
+        elif conf.TIME_FORMAT == "H|CF":
             hours = self.convertFrameToHours(milli)
-            self.videoTime.setText(f"{round(hours, 2)} H")     
+            chunk=self._value._chunk_n
+            frame_idx=self._value._master._chunk_current_frame_idx
+            self.videoTime.setText(f"{round(hours, 2)}|{chunk} C {frame_idx}")
 
 
     def videoProgress_sliderReleased(self):
