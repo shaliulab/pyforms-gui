@@ -10,6 +10,10 @@ __email__       = "ricardojvr@gmail.com"
 __status__      = "Development"
 
 from confapp import conf
+import sys
+import os
+
+sys.path.insert(0, os.getcwd())
 
 try:
     import local_settings

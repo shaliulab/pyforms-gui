@@ -523,7 +523,8 @@ class ControlPlayer(ControlBase, QFrame):
             if open_multiplefiles:
                 self._value = MultipleVideoCapture(value)
             else:
-                self._value = VideoCapture(value)
+                self._value = VideoCapture(value, conf.CHUNK)
+                
         else:
             self._value = value
 
@@ -674,7 +675,7 @@ class ControlPlayer(ControlBase, QFrame):
         elif conf.TIME_FORMAT == "H|CF":
             hours = self.convertFrameToHours(milli)
             chunk=self._value._chunk_n
-            frame_idx=self._value._master._chunk_current_frame_idx
+            frame_idx=getattr(self._value, "_master", self._value)._chunk_current_frame_idx
             self.videoTime.setText(f"{round(hours, 2)}|{chunk} C {frame_idx}")
 
 
