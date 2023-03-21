@@ -567,6 +567,7 @@ class ControlPlayer(ControlBase, QFrame):
     def call_next_frame(self, update_slider=True, update_number=True, increment_frame=True):
         # move the player to the next frame
         self.form.setUpdatesEnabled(False)
+        assert self.video_index is not None
 
         self._current_frame_index = self.video_index
 
@@ -585,7 +586,12 @@ class ControlPlayer(ControlBase, QFrame):
         # read next frame
         with codetiming.Timer(text="self.value.read took {:.8f} seconds", logger=logger.debug):
             (success, self._current_frame) = self.value.read()
- 
+            if success:
+                cv2.imwrite("/home/vibflysleep/last_frame.png", self._current_frame)
+            else:
+                print("Read not successful")
+                print(self._current_frame)
+
         # increment frame index if the step is bigger than 1
         if increment_frame and self.next_frame_step > 1:
             self.video_index += self.next_frame_step
@@ -675,7 +681,7 @@ class ControlPlayer(ControlBase, QFrame):
         elif conf.TIME_FORMAT == "H|CF":
             hours = self.convertFrameToHours(milli)
             chunk=self._value._chunk_n
-            frame_idx=getattr(self._value, "_master", self._value)._chunk_current_frame_idx
+            frame_idx=self._value._stores["main"]._chunk_current_frame_idx
             self.videoTime.setText(f"{round(hours, 2)}|{chunk} C {frame_idx}")
 
 
